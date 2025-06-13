@@ -13,6 +13,9 @@ return new class extends Migration
     {
         Schema::create('ingredients', function (Blueprint $table) {
             $table->id();
+            $table->string('name');
+            $table->boolean('is_available')->default(true);
+            $table->tinyInteger('quantity')->default(1);
             $table->timestamps();
         });
     }
