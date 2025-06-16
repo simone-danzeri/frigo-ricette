@@ -16,7 +16,7 @@ class GroceryController extends Controller
     {
         $groceries = DB::table('groceries')
         ->join('ingredients','groceries.ingredient_id','=','ingredients.id')
-        ->select('ingredients.id','ingredinets.name')
+        ->select('ingredients.id','ingredients.name')
         ->get();
         return response()->json($groceries);
     }
