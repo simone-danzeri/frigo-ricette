@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Ingredient;
 use Illuminate\Http\Request;
 
 class IngredientController extends Controller
@@ -11,7 +12,7 @@ class IngredientController extends Controller
      */
     public function index()
     {
-        //
+        return response()->json(Ingredient::all());
     }
 
     /**
@@ -33,9 +34,9 @@ class IngredientController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(string $id)
+    public function show(Ingredient $ingredient)
     {
-        //
+        return response()->json($ingredient);
     }
 
     /**

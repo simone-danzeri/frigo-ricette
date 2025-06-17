@@ -30,7 +30,7 @@ class GroceryController extends Controller
         ->get();
         foreach($missingIngredients as $ingredient) {
             DB::table('groceries')->updateOrInsert([
-                'ingredient.id' => $ingredient->id
+                'ingredient_id' => $ingredient->id
             ]);
         }
         return response()->json([
