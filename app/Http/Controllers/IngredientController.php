@@ -12,7 +12,8 @@ class IngredientController extends Controller
      */
     public function index()
     {
-        return response()->json(Ingredient::all());
+        $ingredients = Ingredient::all();
+        return view('ingredients.index', compact('ingredients'));
     }
 
     /**
@@ -36,7 +37,7 @@ class IngredientController extends Controller
      */
     public function show(Ingredient $ingredient)
     {
-        return response()->json($ingredient);
+        return view('ingredients.show', compact('ingredient'));
     }
 
     /**
