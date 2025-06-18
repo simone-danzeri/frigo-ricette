@@ -54,17 +54,29 @@ class IngredientController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(string $id)
+    public function edit(Ingredient $ingredient)
     {
-        //
+        return view('ingredients.edit', compact('ingredient'));
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(Request $request, Ingredient $ingredient)
     {
-        //
+        $validated = $request->validate([
+            'name' => 'required|string|max:255',
+            'quantity' => 'nullable|integer|min:0',
+            'is_available' => 'nullable|boolean',
+        ]);
+
+        $ingredient->update([
+            'name' => $validated['name'],
+            'slug' => Str::slug($validated['name']),
+            'quantity' => $validated['quantity'] ?? 1,
+            'is_available' => $request->has('is_available'),
+        ]);
+        return redirect()->route('ingredients.index')->with('success', 'Ingrediente aggiornato con successo.');
     }
 
     /**

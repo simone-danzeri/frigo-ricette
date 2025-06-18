@@ -57,7 +57,7 @@
                                 <span class="text-muted">{{ $ingredient->quantity }}</span>
                             </td>
                             <td class="text-end">
-                                <a href="{{ route('ingredients.edit', $ingredient->id) }}"
+                                <a href="{{ route('ingredients.edit', $ingredient->slug) }}"
                                    class="btn btn-outline-dark btn-sm rounded-pill me-2">
                                     ✏️ Modifica
                                 </a>

@@ -3,10 +3,10 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\GroceryController;
 use App\Http\Controllers\IngredientController;
-use App\Models\Grocery;
 
 Route::get('/', function () {
-    return view('welcome');
-});
+    return view('home');
+})->name('home');
 
-Route::resource('ingredients', IngredientController::class);
+Route::resource('ingredients', IngredientController::class)
+->parameters(['ingredients' => 'ingredient:slug']);
