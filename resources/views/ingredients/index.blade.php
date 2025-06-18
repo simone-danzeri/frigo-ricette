@@ -61,7 +61,7 @@
                                    class="btn btn-outline-dark btn-sm rounded-pill me-2">
                                     ✏️ Modifica
                                 </a>
-                                <form action="{{ route('ingredients.destroy', $ingredient->id) }}"
+                                <form action="{{ route('ingredients.destroy', $ingredient->slug) }}"
                                       method="POST"
                                       class="d-inline"
                                       onsubmit="return confirm('Sei sicuro di voler eliminare questo ingrediente?');">
