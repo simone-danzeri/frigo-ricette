@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Ingredient;
 use Illuminate\Http\Request;
+use Illuminate\Support\Str;
 
 class IngredientController extends Controller
 {
@@ -29,7 +30,17 @@ class IngredientController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $request -> validate([
+            'name' => 'required|string|max:255'
+        ]);
+        $formData = $request->all();
+        $newIngredient = new Ingredient();
+        $newIngredient['name'] = $formData['name'];
+        $newIngredient['slug'] = Str::slug($formData['name'], '-');
+        $newIngredient['is_available'] = true;
+        $newIngredient['quantity'] = 1;
+        $newIngredient->save();
+        return redirect()->route('ingredients.show', ['ingredient' => $newIngredient->slug]);
     }
 
     /**

@@ -3,14 +3,14 @@
 @section('content')
 <div class="max-w-xl mx-auto mt-12">
     <div class="bg-white rounded-2xl shadow-lg p-8 border border-gray-200">
-        <h1 class="text-3xl font-semibold text-gray-800 mb-6">Nuovo Ingrediente</h1>
+        <h1 class="text-3xl font-semibold text-gray-800 my-5 text-center">Nuovo Ingrediente</h1>
 
         <form method="POST" action="{{ route('ingredients.store') }}" class="space-y-6">
             @csrf
 
             <!-- Nome -->
             <div class="d-flex justify-content-center align-items-center">
-                <label for="name" class="block text-sm font-medium text-gray-700 mb-1 ">Nome</label>
+                <label for="name" class="block text-sm font-medium text-gray-700 mb-1 mx-3">Nome</label>
                 <input
                     type="text"
                     name="name"
@@ -25,7 +25,7 @@
             <div class="pt-4 d-flex justify-content-center">
                 <button
                     type="submit"
-                    class="px-6 py-2 rounded-xl bg-indigo-600 text-white font-medium hover:bg-indigo-700 transition focus:outline-none focus:ring-2 focus:ring-indigo-400 shadow-md"
+                    class="btn btn-dark px-4 py-2 rounded-pill shadow-sm my-5"
                 >
                     Salva Ingrediente
                 </button>
