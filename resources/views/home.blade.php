@@ -22,7 +22,7 @@
         </div>
 
         <div class="col-md-4">
-            <a href="{{ route('ingredients.index') }}" class="text-decoration-none text-dark"> <!-- da cambiare in recepies.index -->
+            <a href="{{ route('recepies.index') }}" class="text-decoration-none text-dark">
                 <div class="card shadow-sm border-0 h-100 hover-lift">
                     <div class="card-body text-center py-5">
                         <h2 class="h4 fw-bold mb-3">👩‍🍳 Ricette</h2>

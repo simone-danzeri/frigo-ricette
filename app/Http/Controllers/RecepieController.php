@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Recepie;
 use Illuminate\Http\Request;
 
 class RecepieController extends Controller
@@ -11,7 +12,8 @@ class RecepieController extends Controller
      */
     public function index()
     {
-        //
+        $recepies = Recepie::all();
+        return view('recepies.index', compact('recepies'));
     }
 
     /**
