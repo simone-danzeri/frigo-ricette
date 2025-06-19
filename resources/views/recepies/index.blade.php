@@ -33,7 +33,13 @@
                 @forelse ($recepies as $recepie)
                     <tr>
                         <td class="ps-4">{{ $loop->iteration }}</td>
-                        <td>{{ $recepie->name }}</td>
+                        <td>
+                            <a class="text-dark text-decoration-none" href="{{route('recepies.show', $recepie->slug)}}">
+                                <span class="font-weight-bolder">
+                                    {{ $recepie->name }}
+                                </span>
+                            </a>
+                        </td>
                         <td style="max-width: 400px;">
                             <small class="text-muted">
                                 {{ Str::limit($recepie->process, 150) }}
@@ -52,15 +58,15 @@
                                 <span class="text-muted fst-italic">Nessun ingrediente associato</span>
                             @endif
                         </td>
-                        <td class="text-end pe-4 d-flex align-items-center justify-content-center">
-                            <a href="{{ route('recepies.edit', $recepie->slug) }}" class="btn btn-outline-dark btn-sm rounded-pill mx-2">
+                        <td class="text-end pe-4">
+                            <a href="{{ route('recepies.edit', $recepie->slug) }}" class="btn btn-outline-dark btn-sm rounded-pill mx-2 my-2">
                                 ✏️ Modifica
                             </a>
                             <form action="{{ route('recepies.destroy', $recepie->slug) }}" method="POST" class="d-inline"
                                   onsubmit="return confirm('Sei sicuro di voler eliminare questa ricetta?');">
                                 @csrf
                                 @method('DELETE')
-                                <button type="submit" class="btn btn-danger btn-sm rounded-pill mx-2">
+                                <button type="submit" class="btn btn-danger btn-sm rounded-pill mx-2 my-2">
                                     🗑️ Elimina
                                 </button>
                             </form>
