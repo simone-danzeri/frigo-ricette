@@ -12,7 +12,7 @@ class RecepieController extends Controller
      */
     public function index()
     {
-        $recepies = Recepie::all();
+        $recepies = Recepie::with('ingredient')->get();
         return view('recepies.index', compact('recepies'));
     }
 

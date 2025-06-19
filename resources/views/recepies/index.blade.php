@@ -25,6 +25,7 @@
                     <th class="ps-4">#</th>
                     <th>Nome</th>
                     <th>Procedimento</th>
+                    <th>Ingredienti</th>
                     <th class="text-end pe-4">Azioni</th>
                 </tr>
             </thead>
@@ -38,7 +39,20 @@
                                 {{ Str::limit($recepie->process, 150) }}
                             </small>
                         </td>
-                        <td class="text-end pe-4">
+                        <td>
+                            @if ($recepie->ingredient->count())
+                                <div class="d-flex flex-wrap gap-1">
+                                    @foreach ($recepie->ingredient as $ingredient)
+                                        <span class="badge rounded-pill bg-dark text-light">
+                                            {{ $ingredient->name }}
+                                        </span>
+                                    @endforeach
+                                </div>
+                            @else
+                                <span class="text-muted fst-italic">Nessun ingrediente associato</span>
+                            @endif
+                        </td>
+                        <td class="text-end pe-4 d-flex align-items-center justify-content-center">
                             <a href="{{ route('recepies.edit', $recepie->slug) }}" class="btn btn-outline-dark btn-sm rounded-pill mx-2">
                                 ✏️ Modifica
                             </a>
