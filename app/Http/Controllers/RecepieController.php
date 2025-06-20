@@ -2,8 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Ingredient;
 use App\Models\Recepie;
 use Illuminate\Http\Request;
+use Illuminate\Support\Str;
 
 class RecepieController extends Controller
 {
@@ -21,7 +23,8 @@ class RecepieController extends Controller
      */
     public function create()
     {
-        //
+        $allIngredients = Ingredient::select('id', 'name')->get();
+        return view('recepies.create', compact('allIngredients'));
     }
 
     /**
@@ -29,7 +32,22 @@ class RecepieController extends Controller
      */
     public function store(Request $request)
     {
-        //
+    $validated = $request->validate([
+        'name' => 'required|string|max:255',
+        'process' => 'required|string',
+        'ingredient_ids' => 'array',
+        'ingredient_ids.*' => 'exists:ingredients,id',
+    ]);
+
+    $recepie = Recepie::create([
+        'name' => $validated['name'],
+        'slug' => Str::slug($validated['name']),
+        'process' => $validated['process'],
+    ]);
+
+    $recepie->ingredients()->sync($validated['ingredient_ids'] ?? []);
+
+    return redirect()->route('recepies.index')->with('success', 'Ricetta creata con successo!');
     }
 
     /**
@@ -43,17 +61,33 @@ class RecepieController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(string $id)
+    public function edit(Recepie $recepie)
     {
-        //
+        $allIngredients = Ingredient::select('id', 'name')->get();
+        return view('recepies.edit', compact('recepies', 'allIngredients'));
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(Request $request, Recepie $recepie)
     {
-        //
+    $validated = $request->validate([
+        'name' => 'required|string|max:255',
+        'process' => 'required|string',
+        'ingredient_ids' => 'array',
+        'ingredient_ids.*' => 'exists:ingredients,id',
+    ]);
+
+    $recepie->update([
+        'name' => $validated['name'],
+        'slug' => Str::slug($validated['name']),
+        'process' => $validated['process'],
+    ]);
+
+    $recepie->ingredients()->sync($validated['ingredient_ids'] ?? []);
+
+    return redirect()->route('recepies.index')->with('success', 'Ricetta aggiornata!');
     }
 
     /**
