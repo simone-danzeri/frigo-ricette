@@ -93,8 +93,9 @@ class RecepieController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $id)
+    public function destroy(Recepie $recepie)
     {
-        //
+        $recepie->delete();
+        return redirect()->route('recepies.index')->with('success', 'Ricetta cancellata con successo!');
     }
 }
