@@ -15,6 +15,9 @@ Route::resource('ingredients', IngredientController::class)
 Route::resource('recepies', RecepieController::class)
 ->parameters(['recepies' => 'recepie:slug']);
 
+Route::post('/recepies/{recepie}/cook', [RecepieController::class, 'cook'])
+->name('recepies.cook');
+
 Route::resource('groceries', GroceryController::class);
 
 Route::post('/groceries/generate/{recepie}', [GroceryController::class, 'generateFromRecepie'])

@@ -3,18 +3,16 @@
 @section('title', $recepie->name)
 
 @section('content')
+@if(session('success'))
+    <div class="alert alert-success alert-dismissible fade show mt-3" role="alert">
+        {{ session('success') }}
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    </div>
+@endif
 <div class="bg-light p-5 rounded-4 shadow-sm border position-relative">
     <div class="d-flex justify-content-between align-items-start mb-4">
         <div>
             <h1 class="display-5 fw-semibold mb-1">{{ $recepie->name }}</h1>
-        </div>
-        <div>
-            <form action="{{ route('groceries.generate', $recepie) }}" method="POST" class="mt-4">
-                @csrf
-                <button type="submit" class="btn btn-lg btn-outline-success">
-                    🍳 Cucina questo piatto
-                </button>
-            </form>
         </div>
         <div class="d-flex gap-2">
             <a href="{{ route('recepies.edit', $recepie) }}" class="btn btn-outline-primary">
@@ -32,21 +30,36 @@
         <h5 class="text-uppercase text-secondary fw-bold">Procedimento</h5>
         <p class="lead mt-2" style="white-space: pre-line;">{{ $recepie->process }}</p>
     </div>
-
-    <div>
-        <h5 class="text-uppercase text-secondary fw-bold">Ingredienti</h5>
-        @if ($recepie->ingredients->count())
-            <div class="d-flex flex-wrap gap-2 mt-2">
-                @foreach ($recepie->ingredients as $ingredient)
-                    <span class="badge rounded-pill bg-dark px-3 py-2">
-                        {{ $ingredient->name }}
-                    </span>
-                @endforeach
-            </div>
-        @else
-            <p class="fst-italic text-muted mt-2">Nessun ingrediente associato.</p>
-        @endif
-    </div>
+    <section class="d-flex align-items-center justify-content-between">
+        <div>
+            <h5 class="text-uppercase text-secondary fw-bold">Ingredienti</h5>
+            @if ($recepie->ingredients->count())
+                <div class="d-flex flex-wrap gap-2 mt-2">
+                    @foreach ($recepie->ingredients as $ingredient)
+                        <span class="badge rounded-pill bg-dark px-3 py-2">
+                            {{ $ingredient->name }}
+                        </span>
+                    @endforeach
+                </div>
+            @else
+                <p class="fst-italic text-muted mt-2">Nessun ingrediente associato.</p>
+            @endif
+        </div>
+        <div class="d-flex flex-column gap-3">
+            <form action="{{ route('groceries.generate', $recepie) }}" method="POST" class="">
+                @csrf
+                <button type="submit" class="btn btn-outline-success">
+                    🍳 Cucina questo piatto
+                </button>
+            </form>
+            <form action=" {{route('recepies.cook', $recepie) }}" method="post">
+                @csrf
+                <button type="submit" class="btn btn-outline-success">
+                    Ho cucinato questo piatto
+                </button>
+            </form>
+        </div>
+    </section>
 </div>
 
 <div class="mt-4 text-center">

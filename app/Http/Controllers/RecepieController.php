@@ -100,4 +100,18 @@ class RecepieController extends Controller
         $recepie->delete();
         return redirect()->route('recepies.index')->with('success', 'Ricetta cancellata con successo!');
     }
+
+    /**
+     * Diminish the quantity value when a dish is cooked
+     */
+    public function cook(Recepie $recepie) {
+        foreach($recepie->ingredients as $ingredient) {
+            $ingredient->quantity = max(0, $ingredient->quantity - 1);
+            if($ingredient->quantity === 0) {
+                $ingredient->is_available = false;
+            }
+            $ingredient->save();
+        }
+        return redirect()->route('recepies.show', $recepie)->with('success', 'Ingredienti aggiornati con successo!');
+    }
 }
