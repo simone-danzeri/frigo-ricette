@@ -76,7 +76,7 @@ class IngredientController extends Controller
             'quantity' => $validated['quantity'] ?? 1,
             'is_available' => $request->has('is_available'),
         ]);
-        return redirect()->route('ingredients.index')->with('success', 'Ingrediente aggiornato con successo.');
+        return redirect()->route('ingredients.show', $ingredient)->with('success', 'Ingrediente aggiornato con successo.');
     }
 
     /**

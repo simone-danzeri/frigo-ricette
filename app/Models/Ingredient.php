@@ -7,6 +7,7 @@ use Illuminate\Support\Str;
 
 class Ingredient extends Model
 {
+    protected $fillable = ['name', 'slug', 'quantity', 'is_available'];
     // Relazioni tra models
     public function recepies()
     {

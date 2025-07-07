@@ -14,29 +14,29 @@ class GroceryController extends Controller
      */
     public function index()
     {
-        $groceries = DB::table('groceries')
-        ->join('ingredients','groceries.ingredient_id','=','ingredients.id')
-        ->select('ingredients.id','ingredients.name')
-        ->get();
-        return response()->json($groceries);
+    $groceries = Ingredient::whereIn('id', function($query) {
+            $query->select('ingredient_id')->from('groceries');
+        })->get();
+        return view('groceries.index', compact('groceries'));
     }
     /**
      * Generate grocery list from a recepie
      */
     public function generateFromRecepie(Recepie $recepie)
     {
-        $missingIngredients = $recepie->ingredients()
-        ->where('is_available',false)
+    $missingIngredients = $recepie->ingredients()
+        ->where(function ($query) {
+            $query->where('is_available', false)
+                ->orWhere('quantity', '<=', 0);
+        })
         ->get();
         foreach($missingIngredients as $ingredient) {
             DB::table('groceries')->updateOrInsert([
                 'ingredient_id' => $ingredient->id
             ]);
         }
-        return response()->json([
-            'added' => $missingIngredients->pluck('name'),
-            'message' => 'Ingredienti mancanti aggiunti alla lista della spesa'
-        ]);
+        return redirect()->route('groceries.index')
+        ->with('success', 'Ingredienti mancanti aggiunti alla lista della spesa!');
     }
 
     /**
@@ -53,9 +53,7 @@ class GroceryController extends Controller
             'is_available' => true,
             'quantity' => $ingredient->quantity + 1
         ]);
-        return response()->json([
-            'message' => "{$ingredient->name} aggiornato e rimosso dalla lista della spesa."
-        ]);
+        return redirect()->route('groceries.index')->with('success', 'Ingrediente comprato!');
     }
     /**
      * Show the form for creating a new resource.

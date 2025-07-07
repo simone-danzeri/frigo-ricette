@@ -8,6 +8,14 @@
         <div>
             <h1 class="display-5 fw-semibold mb-1">{{ $recepie->name }}</h1>
         </div>
+        <div>
+            <form action="{{ route('groceries.generate', $recepie) }}" method="POST" class="mt-4">
+                @csrf
+                <button type="submit" class="btn btn-lg btn-outline-success">
+                    🍳 Cucina questo piatto
+                </button>
+            </form>
+        </div>
         <div class="d-flex gap-2">
             <a href="{{ route('recepies.edit', $recepie) }}" class="btn btn-outline-primary">
                 ✏️ Modifica

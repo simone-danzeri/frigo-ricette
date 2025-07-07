@@ -58,6 +58,14 @@
                                 <span class="text-muted fst-italic">Nessun ingrediente associato</span>
                             @endif
                         </td>
+                        <td>
+                            <form action="{{ route('groceries.generate', $recepie) }}" method="POST" class="mt-2">
+                                @csrf
+                                <button type="submit" class="btn btn-sm btn-outline-success w-100">
+                                    🍳 Cucina questo piatto
+                                </button>
+                            </form>
+                        </td>
                         <td class="text-end pe-4">
                             <a href="{{ route('recepies.edit', $recepie->slug) }}" class="btn btn-outline-dark btn-sm rounded-pill mx-2 my-2">
                                 ✏️ Modifica

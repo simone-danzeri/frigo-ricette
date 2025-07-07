@@ -20,7 +20,7 @@
                         </div>
                     @endif
 
-                    <form action="{{ route('ingredients.update', $ingredient->id) }}" method="POST" class="vstack gap-4">
+                    <form action="{{ route('ingredients.update', $ingredient->slug) }}" method="POST" class="vstack gap-4">
                         @csrf
                         @method('PUT')
 
@@ -36,10 +36,12 @@
                             <label for="quantity">Quantità</label>
                         </div>
 
-                        <div class="form-check form-switch d-flex align-items-center">
-                            <input class="form-check-input me-2" type="checkbox" role="switch" id="is_available" name="is_available"
+                        <div class="form-check mb-3">
+                            <input class="form-check-input" type="checkbox" value="1" id="is_available" name="is_available"
                                 {{ old('is_available', $ingredient->is_available) ? 'checked' : '' }}>
-                            <label class="form-check-label ms-1" for="is_available">Disponibile</label>
+                            <label class="form-check-label" for="is_available">
+                                Disponibile
+                            </label>
                         </div>
 
                         <div class="d-flex justify-content-between align-items-center pt-3">

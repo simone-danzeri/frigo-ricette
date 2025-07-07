@@ -14,3 +14,11 @@ Route::resource('ingredients', IngredientController::class)
 
 Route::resource('recepies', RecepieController::class)
 ->parameters(['recepies' => 'recepie:slug']);
+
+Route::resource('groceries', GroceryController::class);
+
+Route::post('/groceries/generate/{recepie}', [GroceryController::class, 'generateFromRecepie'])
+->name('groceries.generate');
+
+Route::post('/groceries/{ingredient}/bought', [GroceryController::class, 'markAsBought'])
+->name('groceries.bought');
