@@ -14,7 +14,7 @@ class RecepieController extends Controller
      */
     public function index()
     {
-        $recepies = Recepie::with('ingredient')->get();
+        $recepies = Recepie::with('ingredients')->get();
         return view('recepies.index', compact('recepies'));
     }
 
@@ -23,8 +23,8 @@ class RecepieController extends Controller
      */
     public function create()
     {
-        $allIngredients = Ingredient::select('id', 'name')->get();
-        return view('recepies.create', compact('allIngredients'));
+        $ingredients = Ingredient::select('id', 'name')->get();
+        return view('recepies.create', compact('ingredients'));
     }
 
     /**
@@ -33,7 +33,7 @@ class RecepieController extends Controller
     public function store(Request $request)
     {
     $validated = $request->validate([
-        'name' => 'required|string|max:255',
+        'name' => 'required|string|max:255|unique:recepies,name',
         'process' => 'required|string',
         'ingredient_ids' => 'array',
         'ingredient_ids.*' => 'exists:ingredients,id',
@@ -63,8 +63,10 @@ class RecepieController extends Controller
      */
     public function edit(Recepie $recepie)
     {
-        $allIngredients = Ingredient::select('id', 'name')->get();
-        return view('recepies.edit', compact('recepies', 'allIngredients'));
+        $allIngredients = Ingredient::select('id', 'name')->get(); // nome coerente
+        $recepieIngredients = $recepie->ingredients()->pluck('ingredients.id')->toArray();
+
+        return view('recepies.edit', compact('recepie', 'allIngredients', 'recepieIngredients'));
     }
 
     /**

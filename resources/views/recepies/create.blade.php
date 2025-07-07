@@ -3,91 +3,136 @@
 @section('title', 'Nuova Ricetta')
 
 @section('content')
-    <div class="bg-white p-5 rounded shadow-sm">
-        <h1 class="mb-4 display-6">🍝 Crea una nuova ricetta</h1>
+    <div class="bg-light rounded-4 shadow-sm p-5 mb-4">
+        <h1 class="display-6 mb-4 fw-semibold text-center text-primary">Crea una Nuova Ricetta ✨</h1>
 
-        @if($errors->any())
-            <div class="alert alert-danger">
-                <ul class="mb-0">
-                    @foreach($errors->all() as $error)
-                        <li>{{ $error }}</li>
-                    @endforeach
-                </ul>
-            </div>
-        @endif
-
-        <form method="POST" action="{{ route('recepies.store') }}">
+        <form action="{{ route('recepies.store') }}" method="POST">
             @csrf
 
+            {{-- Nome --}}
             <div class="mb-3">
-                <label for="name" class="form-label fw-semibold">Nome ricetta</label>
-                <input type="text" class="form-control" id="name" name="name"
-                       value="{{ old('name') }}" required>
+                <label for="name" class="form-label">Nome Ricetta</label>
+                <input type="text" name="name" id="name" class="form-control form-control-lg" required>
             </div>
 
+            {{-- Process --}}
             <div class="mb-3">
-                <label for="process" class="form-label fw-semibold">Procedimento</label>
-                <textarea class="form-control" id="process" name="process" rows="6" required>{{ old('process') }}</textarea>
+                <label for="process" class="form-label">Procedimento</label>
+                <textarea name="process" id="process" class="form-control" rows="5" required></textarea>
             </div>
 
-            <div class="mb-4">
-                <label class="form-label fw-semibold">Ingredienti</label>
-
-                {{-- Pills --}}
-                <div class="mb-3 d-flex flex-wrap gap-2" id="ingredient-pills">
-                    {{-- dinamico via JS --}}
+            {{-- Ingredienti --}}
+            <div class="mb-3">
+                <label for="ingredient-search" class="form-label">Ingredienti</label>
+                <div class="position-relative">
+                    <input type="text" id="ingredient-search" class="form-control mb-2" placeholder="Cerca ingrediente...">
+                    <div id="suggestions" class="list-group position-absolute w-100 z-3 d-none" style="top: 100%;"></div>
                 </div>
 
-                {{-- Search Input --}}
-                <input type="text" class="form-control" id="ingredient-search" placeholder="Cerca un ingrediente...">
-                <div class="form-text">Premi Invio per aggiungere. Gli ingredienti devono esistere.</div>
 
-                <div class="text-danger mt-2 d-none" id="ingredient-error">Ingrediente non trovato.</div>
+                <div id="selected-ingredients" class="mb-3"></div>
+
+                <div id="ingredient-not-found" class="text-danger small d-none">
+                    Ingrediente inesistente.
+                </div>
             </div>
 
-            <button type="submit" class="btn btn-dark px-4">➕ Crea Ricetta</button>
-            <a href="{{ route('recepies.index') }}" class="btn btn-outline-secondary ms-2">← Annulla</a>
+            {{-- Pulsanti --}}
+            <div class="d-flex justify-content-between">
+                <a href="{{ route('recepies.index') }}" class="btn btn-outline-secondary">🔙 Indietro</a>
+                <button type="submit" class="btn btn-success btn-lg">🍳 Crea Ricetta</button>
+            </div>
         </form>
     </div>
-@endsection
 
-@section('scripts')
-<script>
-    const ingredients = @json($allIngredients);
-    const pillsContainer = document.getElementById('ingredient-pills');
+    {{-- Script --}}
+    <script>
     const searchInput = document.getElementById('ingredient-search');
-    const errorDiv = document.getElementById('ingredient-error');
+    const selectedContainer = document.getElementById('selected-ingredients');
+    const notFoundMsg = document.getElementById('ingredient-not-found');
+    const suggestionsBox = document.getElementById('suggestions');
 
-    searchInput.addEventListener('keypress', function (e) {
+    const allIngredients = @json($ingredients);
+
+    function addIngredient(ingredient) {
+        if ([...document.querySelectorAll('input[name="ingredient_ids[]"]')].some(el => el.value == ingredient.id)) return;
+
+        const span = document.createElement('span');
+        span.className = 'badge rounded-pill text-bg-primary me-1 mb-1 d-inline-flex align-items-center';
+        span.innerHTML = `
+            ${ingredient.name}
+            <button type="button" class="btn-close btn-close-white btn-sm ms-2 remove-ingredient" aria-label="Remove" data-id="${ingredient.id}"></button>
+        `;
+
+        const hidden = document.createElement('input');
+        hidden.type = 'hidden';
+        hidden.name = 'ingredient_ids[]';
+        hidden.value = ingredient.id;
+
+        selectedContainer.appendChild(span);
+        selectedContainer.appendChild(hidden);
+        searchInput.value = '';
+        notFoundMsg.classList.add('d-none');
+        suggestionsBox.classList.add('d-none');
+        suggestionsBox.innerHTML = '';
+    }
+
+    searchInput.addEventListener('input', () => {
+        const query = searchInput.value.trim().toLowerCase();
+        suggestionsBox.innerHTML = '';
+
+        if (query.length < 1) {
+            suggestionsBox.classList.add('d-none');
+            return;
+        }
+
+        const filtered = allIngredients.filter(i =>
+            i.name.toLowerCase().includes(query)
+        );
+
+        if (filtered.length === 0) {
+            suggestionsBox.classList.add('d-none');
+            notFoundMsg.classList.remove('d-none');
+            return;
+        }
+
+        notFoundMsg.classList.add('d-none');
+        suggestionsBox.classList.remove('d-none');
+
+        filtered.forEach(ingredient => {
+            const item = document.createElement('button');
+            item.type = 'button';
+            item.className = 'list-group-item list-group-item-action';
+            item.textContent = ingredient.name;
+            item.addEventListener('click', () => addIngredient(ingredient));
+            suggestionsBox.appendChild(item);
+        });
+    });
+
+    searchInput.addEventListener('keydown', e => {
         if (e.key === 'Enter') {
             e.preventDefault();
-            const term = searchInput.value.trim().toLowerCase();
-            const found = ingredients.find(i => i.name.toLowerCase() === term);
-            if (!found) {
-                errorDiv.classList.remove('d-none');
-                return;
-            }
-            errorDiv.classList.add('d-none');
-
-            if (document.querySelector(`input[value="${found.id}"]`)) {
-                searchInput.value = '';
-                return;
-            }
-
-            const pill = document.createElement('span');
-            pill.className = 'badge bg-primary rounded-pill me-2 mb-2';
-            pill.innerHTML = `${found.name}
-                <button type="button" class="btn-close btn-close-white btn-sm ms-2 remove-pill" data-id="${found.id}"></button>
-                <input type="hidden" name="ingredient_ids[]" value="${found.id}">`;
-            pillsContainer.appendChild(pill);
-            searchInput.value = '';
+            const query = searchInput.value.trim().toLowerCase();
+            const match = allIngredients.find(i => i.name.toLowerCase() === query);
+            if (match) addIngredient(match);
+            else notFoundMsg.classList.remove('d-none');
         }
     });
 
-    pillsContainer.addEventListener('click', function(e) {
-        if (e.target.classList.contains('remove-pill')) {
+    selectedContainer.addEventListener('click', e => {
+        if (e.target.classList.contains('remove-ingredient')) {
+            const id = e.target.dataset.id;
             e.target.closest('span').remove();
+            [...document.querySelectorAll(`input[name="ingredient_ids[]"][value="${id}"]`)].forEach(i => i.remove());
+        }
+    });
+
+    document.addEventListener('click', e => {
+        if (!searchInput.contains(e.target) && !suggestionsBox.contains(e.target)) {
+            suggestionsBox.classList.add('d-none');
         }
     });
 </script>
+
+
 @endsection

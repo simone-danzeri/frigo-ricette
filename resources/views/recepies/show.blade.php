@@ -27,9 +27,9 @@
 
     <div>
         <h5 class="text-uppercase text-secondary fw-bold">Ingredienti</h5>
-        @if ($recepie->ingredient->count())
+        @if ($recepie->ingredients->count())
             <div class="d-flex flex-wrap gap-2 mt-2">
-                @foreach ($recepie->ingredient as $ingredient)
+                @foreach ($recepie->ingredients as $ingredient)
                     <span class="badge rounded-pill bg-dark px-3 py-2">
                         {{ $ingredient->name }}
                     </span>

@@ -9,7 +9,7 @@ class Recepie extends Model
 {
     //
     protected $fillable = ['id', 'name', 'slug', 'process'];
-    public function ingredient()
+    public function ingredients()
     {
         return $this->belongsToMany(Ingredient::class, 'ingredient_recepie');
     }

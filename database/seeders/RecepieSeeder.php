@@ -26,7 +26,7 @@ class RecepieSeeder extends Seeder
             ]);
 
             // Collega gli ingredienti via tabella pivot
-            $recepie->ingredient()->attach($data['ingredient_ids']);
+            $recepie->ingredients()->attach($data['ingredient_ids']);
         }
     }
 }

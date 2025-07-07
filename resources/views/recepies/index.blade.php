@@ -46,9 +46,9 @@
                             </small>
                         </td>
                         <td>
-                            @if ($recepie->ingredient->count())
+                            @if ($recepie->ingredients->count())
                                 <div class="d-flex flex-wrap gap-1">
-                                    @foreach ($recepie->ingredient as $ingredient)
+                                    @foreach ($recepie->ingredients as $ingredient)
                                         <span class="badge rounded-pill bg-dark text-light">
                                             {{ $ingredient->name }}
                                         </span>
