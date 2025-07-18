@@ -14,8 +14,13 @@ class RecipesController extends Controller
         );
     }
 
-    public function show(Recepie $recepie)
+    public function show($slug)
     {
-        return response()->json($recepie->load('ingredients'));
+        $recipe = Recepie::with('ingredients')
+                    ->where('slug', $slug)
+                    ->firstOrFail();
+
+        return response()->json($recipe);
     }
+
 }
